@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qafs.dao.EmailRecordMapper">
+	<resultMap id="BaseResultMap" type="com.qafs.domain.EmailRecord">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="orderId" jdbcType="INTEGER" property="orderid" />
+		<result column="receiver" jdbcType="VARCHAR" property="receiver" />
+		<result column="copyer" jdbcType="VARCHAR" property="copyer" />
+		<result column="subject" jdbcType="VARCHAR" property="subject" />
+		<result column="text" jdbcType="VARCHAR" property="text" />
+		<result column="attachment" jdbcType="VARCHAR" property="attachment" />
+		<result column="confirmStatus" jdbcType="INTEGER" property="confirmstatus" />
+		<result column="sendStatus" jdbcType="INTEGER" property="sendstatus" />
+		<result column="orderType" jdbcType="VARCHAR" property="ordertype" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, orderId, receiver, copyer, subject, text, attachment, confirmStatus,
+		sendStatus,
+		orderType, status, createTime, updateTime
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_email_record
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectAll" resultType="java.lang.Integer"
+		parameterType="com.qafs.domain.EmailRecord">
+		select count(*)
+		from
+		t_email_record
+		where status=1 and
+		orderType='t_requirement_change_order'
+		<if test="receiver !=null">
+			and receiver like concat(concat('%',#{receiver}),'%')
+		</if>
+		<if test="orderid !=null">
+			and orderId = #{orderid}
+		</if>
+		<if test="confirmstatus !=null">
+			and confirmStatus = #{confirmstatus}
+		</if>
+
+	</select>
+	<select id="selectBySearch" parameterType="com.qafs.dto.SearchDto"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_email_record
+		where status=1 and receiver like
+		concat(concat('%',#{email}),'%') and confirmStatus=0
+		<if test="search != null">
+			and subject like concat(concat('%',#{search}),'%')
+		</if>
+		order by createTime desc
+		<if test="limit != 0">
+			LIMIT #{offset},#{limit}
+		</if>
+	</select>
+	<insert id="insertSelective" parameterType="com.qafs.domain.EmailRecord"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_email_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderid != null">
+				orderId,
+			</if>
+			<if test="receiver != null">
+				receiver,
+			</if>
+			<if test="copyer != null">
+				copyer,
+			</if>
+			<if test="subject != null">
+				subject,
+			</if>
+			<if test="text != null">
+				text,
+			</if>
+			<if test="attachment != null">
+				attachment,
+			</if>
+			<if test="confirmstatus != null">
+				confirmStatus,
+			</if>
+			<if test="ordertype != null">
+				orderType,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="sendstatus != null">
+				sendStatus,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=INTEGER},
+			</if>
+			<if test="receiver != null">
+				#{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="copyer != null">
+				#{copyer,jdbcType=VARCHAR},
+			</if>
+			<if test="subject != null">
+				#{subject,jdbcType=VARCHAR},
+			</if>
+			<if test="text != null">
+				#{text,jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				#{attachment,jdbcType=VARCHAR},
+			</if>
+			<if test="confirmstatus != null">
+				#{confirmstatus,jdbcType=INTEGER},
+			</if>
+			<if test="ordertype != null">
+				#{ordertype,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="sendstatus != null">
+				#{sendstatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.qafs.domain.EmailRecord">
+		update t_email_record
+		<set>
+			<if test="orderid != null">
+				orderId = #{orderid,jdbcType=INTEGER},
+			</if>
+			<if test="receiver != null">
+				receiver = #{receiver,jdbcType=VARCHAR},
+			</if>
+			<if test="copyer != null">
+				copyer = #{copyer,jdbcType=VARCHAR},
+			</if>
+			<if test="subject != null">
+				subject = #{subject,jdbcType=VARCHAR},
+			</if>
+			<if test="text != null">
+				text = #{text,jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				attachment = #{attachment,jdbcType=VARCHAR},
+			</if>
+			<if test="confirmstatus != null">
+				confirmStatus = #{confirmstatus,jdbcType=INTEGER},
+			</if>
+			<if test="ordertype != null">
+				orderType = #{ordertype,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="sendstatus != null">
+				sendStatus = #{sendstatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

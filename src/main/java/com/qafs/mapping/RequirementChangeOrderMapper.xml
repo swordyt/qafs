@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qafs.dao.RequirementChangeOrderMapper">
+	<resultMap id="BaseResultMap" type="com.qafs.domain.RequirementChangeOrder">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="changeApplicant" jdbcType="INTEGER" property="changeapplicant" />
+		<result column="onlineTime" jdbcType="TIMESTAMP" property="onlinetime" />
+		<result column="onlineTitle" jdbcType="VARCHAR" property="onlinetitle" />
+		<result column="changeDealMan" jdbcType="INTEGER" property="changedealman" />
+		<result column="orderStatus" jdbcType="VARCHAR" property="orderstatus" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.qafs.vm.RcoDetailVm">
+		<result column="onlineContent" jdbcType="LONGVARCHAR" property="onlinecontent" />
+		<result column="developmentEngineer" jdbcType="LONGVARCHAR"
+			property="developmentengineer" />
+		<result column="operationEngineer" jdbcType="LONGVARCHAR"
+			property="operationengineer" />
+		<result column="testEngineer" jdbcType="LONGVARCHAR" property="testengineer" />
+		<result column="relatedSystem" jdbcType="LONGVARCHAR" property="relatedsystem" />
+		<result column="networkConfigurationChange" jdbcType="LONGVARCHAR"
+			property="networkconfigurationchange" />
+		<result column="changeSystemOrder" jdbcType="LONGVARCHAR"
+			property="changesystemorder" />
+		<result column="databaseChange" jdbcType="LONGVARCHAR"
+			property="databasechange" />
+		<result column="configurationFileChange" jdbcType="LONGVARCHAR"
+			property="configurationfilechange" />
+		<result column="rollbackPlan" jdbcType="LONGVARCHAR" property="rollbackplan" />
+		<result column="upYesAndNo" jdbcType="LONGVARCHAR" property="upyesandno" />
+		<result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, changeApplicant, onlineTime, onlineTitle, changeDealMan, orderStatus,
+		status,
+		createTime, updateTime
+	</sql>
+	<sql id="Blob_Column_List">
+		onlineContent, developmentEngineer, operationEngineer, testEngineer, relatedSystem,
+		networkConfigurationChange, changeSystemOrder, databaseChange,
+		configurationFileChange,
+		rollbackPlan, upYesAndNo, comment
+	</sql>
+	<select id="selectAll" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		select count(*)
+		from
+		t_requirement_change_order
+		where
+		status=1 and changeApplicant=#{userId}
+	</select>
+	<select id="selectBySearch" parameterType="com.qafs.dto.SearchDto"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		from t_requirement_change_order
+		where status=1 and
+		changeApplicant=#{userId}
+		<if test="search != null">
+			and onlineTitle like concat(concat('%',#{search}),'%')
+		</if>
+		order by createTime desc
+		<if test="limit != 0">
+			LIMIT #{offset},#{limit}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from t_requirement_change_order
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_requirement_change_order
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.qafs.domain.RequirementChangeOrderWithBLOBs">
+		insert into
+		t_requirement_change_order (id, changeApplicant, onlineTime,
+		onlineTitle, changeDealMan, orderStatus,
+		status, createTime,
+		updateTime,
+		onlineContent, developmentEngineer,
+		operationEngineer,
+		testEngineer,
+		relatedSystem, networkConfigurationChange,
+		changeSystemOrder, databaseChange,
+		configurationFileChange, upYesAndNo,
+		comment)
+		values (#{id,jdbcType=INTEGER},
+		#{changeapplicant,jdbcType=INTEGER},
+		#{onlinetime,jdbcType=TIMESTAMP},
+		#{onlinetitle,jdbcType=VARCHAR}, #{changedealman,jdbcType=INTEGER},
+		#{orderstatus,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{createtime,jdbcType=TIMESTAMP},
+		#{updatetime,jdbcType=TIMESTAMP},
+		#{onlinecontent,jdbcType=LONGVARCHAR},
+		#{developmentengineer,jdbcType=LONGVARCHAR},
+		#{operationengineer,jdbcType=LONGVARCHAR},
+		#{testengineer,jdbcType=LONGVARCHAR},
+		#{relatedsystem,jdbcType=LONGVARCHAR},
+		#{networkconfigurationchange,jdbcType=LONGVARCHAR},
+		#{changesystemorder,jdbcType=LONGVARCHAR},
+		#{databasechange,jdbcType=LONGVARCHAR},
+		#{configurationfilechange,jdbcType=LONGVARCHAR},
+		#{upyesandno,jdbcType=LONGVARCHAR},
+		#{comment,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.qafs.domain.RequirementChangeOrderWithBLOBs"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_requirement_change_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="changeapplicant != null">
+				changeApplicant,
+			</if>
+			<if test="onlinetime != null">
+				onlineTime,
+			</if>
+			<if test="onlinetitle != null">
+				onlineTitle,
+			</if>
+			<if test="changedealman != null">
+				changeDealMan,
+			</if>
+			<if test="orderstatus != null">
+				orderStatus,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="onlinecontent != null">
+				onlineContent,
+			</if>
+			<if test="developmentengineer != null">
+				developmentEngineer,
+			</if>
+			<if test="operationengineer != null">
+				operationEngineer,
+			</if>
+			<if test="testengineer != null">
+				testEngineer,
+			</if>
+			<if test="relatedsystem != null">
+				relatedSystem,
+			</if>
+			<if test="networkconfigurationchange != null">
+				networkConfigurationChange,
+			</if>
+			<if test="changesystemorder != null">
+				changeSystemOrder,
+			</if>
+			<if test="databasechange != null">
+				databaseChange,
+			</if>
+			<if test="configurationfilechange != null">
+				configurationFileChange,
+			</if>
+			<if test="upyesandno != null">
+				upYesAndNo,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="rollbackplan != null">
+				rollbackPlan,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="changeapplicant != null">
+				#{changeapplicant,jdbcType=INTEGER},
+			</if>
+			<if test="onlinetime != null">
+				#{onlinetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="onlinetitle != null">
+				#{onlinetitle,jdbcType=VARCHAR},
+			</if>
+			<if test="changedealman != null">
+				#{changedealman,jdbcType=INTEGER},
+			</if>
+			<if test="orderstatus != null">
+				#{orderstatus,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="onlinecontent != null">
+				#{onlinecontent,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="developmentengineer != null">
+				#{developmentengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="operationengineer != null">
+				#{operationengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testengineer != null">
+				#{testengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="relatedsystem != null">
+				#{relatedsystem,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="networkconfigurationchange != null">
+				#{networkconfigurationchange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="changesystemorder != null">
+				#{changesystemorder,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="databasechange != null">
+				#{databasechange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="configurationfilechange != null">
+				#{configurationfilechange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="upyesandno != null">
+				#{upyesandno,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="rollbackplan != null">
+				#{rollbackplan,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.qafs.domain.RequirementChangeOrderWithBLOBs">
+		update t_requirement_change_order
+		<set>
+			<if test="changeapplicant != null">
+				changeApplicant = #{changeapplicant,jdbcType=INTEGER},
+			</if>
+			<if test="onlinetime != null">
+				onlineTime = #{onlinetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="onlinetitle != null">
+				onlineTitle = #{onlinetitle,jdbcType=VARCHAR},
+			</if>
+			<if test="changedealman != null">
+				changeDealMan = #{changedealman,jdbcType=INTEGER},
+			</if>
+			<if test="orderstatus != null">
+				orderStatus = #{orderstatus,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="onlinecontent != null">
+				onlineContent = #{onlinecontent,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="developmentengineer != null">
+				developmentEngineer =
+				#{developmentengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="operationengineer != null">
+				operationEngineer =
+				#{operationengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="testengineer != null">
+				testEngineer = #{testengineer,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="relatedsystem != null">
+				relatedSystem = #{relatedsystem,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="networkconfigurationchange != null">
+				networkConfigurationChange =
+				#{networkconfigurationchange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="changesystemorder != null">
+				changeSystemOrder =
+				#{changesystemorder,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="databasechange != null">
+				databaseChange = #{databasechange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="configurationfilechange != null">
+				configurationFileChange =
+				#{configurationfilechange,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="upyesandno != null">
+				upYesAndNo = #{upyesandno,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="rollbackplan != null">
+				rollbackPlan = #{rollbackplan,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qafs.domain.RequirementChangeOrderWithBLOBs">
+		update
+		t_requirement_change_order
+		set changeApplicant =
+		#{changeapplicant,jdbcType=INTEGER},
+		onlineTime =
+		#{onlinetime,jdbcType=TIMESTAMP},
+		onlineTitle =
+		#{onlinetitle,jdbcType=VARCHAR},
+		changeDealMan =
+		#{changedealman,jdbcType=INTEGER},
+		orderStatus =
+		#{orderstatus,jdbcType=VARCHAR},
+		status = #{status,jdbcType=INTEGER},
+		onlineContent =
+		#{onlinecontent,jdbcType=LONGVARCHAR},
+		developmentEngineer =
+		#{developmentengineer,jdbcType=LONGVARCHAR},
+		operationEngineer =
+		#{operationengineer,jdbcType=LONGVARCHAR},
+		testEngineer =
+		#{testengineer,jdbcType=LONGVARCHAR},
+		relatedSystem =
+		#{relatedsystem,jdbcType=LONGVARCHAR},
+		networkConfigurationChange =
+		#{networkconfigurationchange,jdbcType=LONGVARCHAR},
+		changeSystemOrder =
+		#{changesystemorder,jdbcType=LONGVARCHAR},
+		databaseChange =
+		#{databasechange,jdbcType=LONGVARCHAR},
+		configurationFileChange =
+		#{configurationfilechange,jdbcType=LONGVARCHAR},
+		upYesAndNo =
+		#{upyesandno,jdbcType=LONGVARCHAR},
+		comment =
+		#{comment,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.qafs.domain.RequirementChangeOrder">
+		update
+		t_requirement_change_order
+		set changeApplicant =
+		#{changeapplicant,jdbcType=INTEGER},
+		onlineTime =
+		#{onlinetime,jdbcType=TIMESTAMP},
+		onlineTitle =
+		#{onlinetitle,jdbcType=VARCHAR},
+		changeDealMan =
+		#{changedealman,jdbcType=INTEGER},
+		orderStatus =
+		#{orderstatus,jdbcType=VARCHAR},
+		status = #{status,jdbcType=INTEGER},
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
